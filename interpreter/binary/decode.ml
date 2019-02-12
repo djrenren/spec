@@ -440,6 +440,9 @@ and instr_memsafety s =
   match op s with
     0x00 -> SegmentNew
   | 0x01 -> SegmentFree
+  | 0x02 -> HandleAdd
+  | 0x03 -> HandleSub
+  | 0x04 -> HandleSlice
   | b -> illegal s pos b
 
 and instr_block s = List.rev (instr_block' s [])

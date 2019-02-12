@@ -255,6 +255,9 @@ let rec instr e =
     | Convert op -> cvtop op, []
     | SegmentNew -> "segment.new", []
     | SegmentFree -> "segment.free", []
+    | HandleAdd -> "handle.add", []
+    | HandleSub -> "handle.sub", []
+    | HandleSlice -> "handle.slice", []
   in Node (head, inner)
 
 let const c =

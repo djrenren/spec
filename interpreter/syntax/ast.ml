@@ -108,6 +108,9 @@ and instr' =
   | Convert of cvtop                  (* conversion *)
   | SegmentNew
   | SegmentFree
+  | HandleSlice
+  | HandleSub
+  | HandleAdd
 
 
 (* Globals & Functions *)

@@ -291,8 +291,15 @@ let rec check_instr (c : context) (e : instr) (s : infer_stack_type) : op_type =
 
   | SegmentNew ->
     [I32Type] --> [HandleType]
+
   | SegmentFree ->
     [HandleType] --> []
+  | HandleAdd ->
+    [HandleType; I32Type] --> [HandleType]
+  | HandleSub ->
+    [HandleType; I32Type] --> [HandleType]
+  | HandleSlice ->
+    [HandleType; I32Type; I32Type] --> [HandleType]
 
 and check_seq (c : context) (es : instr list) : infer_stack_type =
   match es with

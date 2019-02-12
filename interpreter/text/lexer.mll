@@ -336,6 +336,9 @@ rule token = parse
 
   | "segment.new" { SEGMENT_NEW }
   | "segment.free" { SEGMENT_FREE }
+  | "handle.add" { HANDLE_ADD }
+  | "handle.sub" { HANDLE_SUB }
+  | "handle.slice" { HANDLE_SLICE }
 
   | "module" { MODULE }
   | "binary" { BIN }

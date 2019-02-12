@@ -372,6 +372,9 @@ let encode m =
       | Convert (F64 F64Op.ReinterpretInt) -> op 0xbf
       | SegmentNew -> op 0xfa; op 0x00
       | SegmentFree -> op 0xfa; op 0x01
+      | HandleAdd -> op 0xfa; op 0x02
+      | HandleSub -> op 0xfa; op 0x03
+      | HandleSlice -> op 0xfa; op 0x04
 
     let const c =
       list instr c.it; end_ ()
