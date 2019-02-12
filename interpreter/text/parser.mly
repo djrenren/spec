@@ -159,7 +159,7 @@ let inline_type_explicit (c : context) x ft at =
 %token ASSERT_MALFORMED ASSERT_INVALID ASSERT_SOFT_INVALID ASSERT_UNLINKABLE
 %token ASSERT_RETURN ASSERT_RETURN_CANONICAL_NAN ASSERT_RETURN_ARITHMETIC_NAN ASSERT_TRAP ASSERT_EXHAUSTION
 %token INPUT OUTPUT
-%token SEGMENT_NEW SEGMENT_FREE HANDLE_SLICE HANDLE_ADD HANDLE_SUB
+%token SEGMENT_NEW SEGMENT_FREE HANDLE_SLICE HANDLE_ADD HANDLE_SUB SEGMENT_LOAD SEGMENT_STORE
 %token EOF
 
 %token<string> NAT
@@ -175,7 +175,9 @@ let inline_type_explicit (c : context) x ft at =
 %token<Ast.instr'> COMPARE
 %token<Ast.instr'> CONVERT
 %token<int option -> Memory.offset -> Ast.instr'> LOAD
+%token<int option -> Memory.offset -> Ast.instr'> SEGMENT_LOAD
 %token<int option -> Memory.offset -> Ast.instr'> STORE
+%token<int option -> Memory.offset -> Ast.instr'> SEGMENT_STORE
 %token<string> OFFSET_EQ_NAT
 %token<string> ALIGN_EQ_NAT
 
@@ -331,6 +333,8 @@ plain_instr :
   | HANDLE_SLICE { fun c -> HandleSlice}
   | HANDLE_SUB { fun c -> HandleSub}
   | HANDLE_ADD { fun c -> HandleAdd}
+  | SEGMENT_LOAD offset_opt align_opt { fun c -> $1 $3 $2 }
+  | SEGMENT_STORE offset_opt align_opt { fun c -> $1 $3 $2 }
 
 
 call_instr :

@@ -212,6 +212,15 @@ let storeop op =
   | None -> memop "store" op
   | Some sz -> memop ("store" ^ pack_size sz) op
 
+let numeric_loadop op =
+  match op.sz with
+  | None -> memop "segment.load" op
+  | Some (sz, ext) -> memop ("segment.load" ^ pack_size sz ^ extension ext) op
+
+let numeric_storeop op =
+  match op.sz with
+  | None -> memop "segment.store" op
+  | Some sz -> memop ("segment.store" ^ pack_size sz) op
 
 (* Expressions *)
 
@@ -258,6 +267,8 @@ let rec instr e =
     | HandleAdd -> "handle.add", []
     | HandleSub -> "handle.sub", []
     | HandleSlice -> "handle.slice", []
+    | NumericSegmentLoad op -> numeric_loadop op, []
+    | NumericSegmentStore op -> numeric_storeop op, []
   in Node (head, inner)
 
 let const c =

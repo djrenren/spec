@@ -202,3 +202,42 @@ let f64_reinterpret_i64 = Convert (F64 F64Op.ReinterpretInt)
 let memory_size = MemorySize
 let memory_grow = MemoryGrow
 
+let i32_segment_load align offset = NumericSegmentLoad {ty = I32Type; align; offset; sz = None}
+let i64_segment_load align offset = NumericSegmentLoad {ty = I64Type; align; offset; sz = None}
+let f32_segment_load align offset = NumericSegmentLoad {ty = F32Type; align; offset; sz = None}
+let f64_segment_load align offset = NumericSegmentLoad {ty = F64Type; align; offset; sz = None}
+let i32_segment_load8_s align offset =
+  NumericSegmentLoad {ty = I32Type; align; offset; sz = Some (Pack8, SX)}
+let i32_segment_load8_u align offset =
+  NumericSegmentLoad {ty = I32Type; align; offset; sz = Some (Pack8, ZX)}
+let i32_segment_load16_s align offset =
+  NumericSegmentLoad {ty = I32Type; align; offset; sz = Some (Pack16, SX)}
+let i32_segment_load16_u align offset =
+  NumericSegmentLoad {ty = I32Type; align; offset; sz = Some (Pack16, ZX)}
+let i64_segment_load8_s align offset =
+  NumericSegmentLoad {ty = I64Type; align; offset; sz = Some (Pack8, SX)}
+let i64_segment_load8_u align offset =
+  NumericSegmentLoad {ty = I64Type; align; offset; sz = Some (Pack8, ZX)}
+let i64_segment_load16_s align offset =
+  NumericSegmentLoad {ty = I64Type; align; offset; sz = Some (Pack16, SX)}
+let i64_segment_load16_u align offset =
+  NumericSegmentLoad {ty = I64Type; align; offset; sz = Some (Pack16, ZX)}
+let i64_segment_load32_s align offset =
+  NumericSegmentLoad {ty = I64Type; align; offset; sz = Some (Pack32, SX)}
+let i64_segment_load32_u align offset =
+  NumericSegmentLoad {ty = I64Type; align; offset; sz = Some (Pack32, ZX)}
+
+let i32_segment_store align offset = NumericSegmentStore {ty = I32Type; align; offset; sz = None}
+let i64_segment_store align offset = NumericSegmentStore {ty = I64Type; align; offset; sz = None}
+let f32_segment_store align offset = NumericSegmentStore {ty = F32Type; align; offset; sz = None}
+let f64_segment_store align offset = NumericSegmentStore {ty = F64Type; align; offset; sz = None}
+let i32_segment_store8 align offset =
+  NumericSegmentStore {ty = I32Type; align; offset; sz = Some Pack8}
+let i32_segment_store16 align offset =
+  NumericSegmentStore {ty = I32Type; align; offset; sz = Some Pack16}
+let i64_segment_store8 align offset =
+  NumericSegmentStore {ty = I64Type; align; offset; sz = Some Pack8}
+let i64_segment_store16 align offset =
+  NumericSegmentStore {ty = I64Type; align; offset; sz = Some Pack16}
+let i64_segment_store32 align offset =
+  NumericSegmentStore {ty = I64Type; align; offset; sz = Some Pack32}

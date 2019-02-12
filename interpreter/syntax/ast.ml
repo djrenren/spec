@@ -111,6 +111,8 @@ and instr' =
   | HandleSlice
   | HandleSub
   | HandleAdd
+  | NumericSegmentLoad of loadop
+  | NumericSegmentStore of storeop
 
 
 (* Globals & Functions *)

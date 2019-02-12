@@ -203,7 +203,9 @@ let memop s =
 
 let rec instr s =
   let pos = pos s in
-  match op s with
+  instr_op pos s (op s)
+and instr_op pos s o =
+  match o with
   | 0x00 -> unreachable
   | 0x01 -> nop
 
@@ -443,7 +445,11 @@ and instr_memsafety s =
   | 0x02 -> HandleAdd
   | 0x03 -> HandleSub
   | 0x04 -> HandleSlice
-  | b -> illegal s pos b
+
+  | o -> (match instr_op pos s o with
+           Load memarg -> NumericSegmentLoad memarg
+         | Store memarg -> NumericSegmentStore memarg
+         | _ -> illegal s pos o)
 
 and instr_block s = List.rev (instr_block' s [])
 and instr_block' s es =

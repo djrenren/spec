@@ -140,7 +140,7 @@ let reserved = ([^'\"''('')'';'] # space)+  (* hack for table size *)
 
 let ixx = "i" ("32" | "64")
 let fxx = "f" ("32" | "64")
-let nxx = ixx | fxx | "handle"
+let nxx = ixx | fxx
 let mixx = "i" ("8" | "16" | "32" | "64")
 let mfxx = "f" ("32" | "64")
 let sign = "s" | "u"
@@ -160,7 +160,7 @@ rule token = parse
     { error lexbuf "illegal control character in string literal" }
   | '"'character*'\\'_
     { error_nest (Lexing.lexeme_end_p lexbuf) lexbuf "illegal escape" }
-
+  | "handle" { VALUE_TYPE (value_type "handle")}
   | (nxx as t) { VALUE_TYPE (value_type t) }
   | (nxx as t)".const"
     { let open Source in
@@ -204,10 +204,18 @@ rule token = parse
     { LOAD (fun a o ->
         numop t (i32_load (opt a 2)) (i64_load (opt a 3))
                 (f32_load (opt a 2)) (f64_load (opt a 3)) o) }
+  | (nxx as t)".segment.load"
+    { SEGMENT_LOAD (fun a o ->
+        numop t (i32_segment_load (opt a 2)) (i64_segment_load (opt a 3))
+                (f32_segment_load (opt a 2)) (f64_segment_load (opt a 3)) o) }
   | (nxx as t)".store"
     { STORE (fun a o ->
         numop t (i32_store (opt a 2)) (i64_store (opt a 3))
                 (f32_store (opt a 2)) (f64_store (opt a 3)) o) }
+  | (nxx as t)".segment.store"
+    { SEGMENT_STORE (fun a o ->
+        numop t (i32_segment_store (opt a 2)) (i64_segment_store (opt a 3))
+                (f32_segment_store (opt a 2)) (f64_segment_store (opt a 3)) o) }
   | (ixx as t)".load"(mem_size as sz)"_"(sign as s)
     { if t = "i32" && sz = "32" then error lexbuf "unknown operator";
       LOAD (fun a o ->
@@ -220,6 +228,18 @@ rule token = parse
             (ext s i64_load8_s i64_load8_u (opt a 0))
             (ext s i64_load16_s i64_load16_u (opt a 1))
             (ext s i64_load32_s i64_load32_u (opt a 2)) o)) }
+  | (ixx as t)".segment.load"(mem_size as sz)"_"(sign as s)
+    { if t = "i32" && sz = "32" then error lexbuf "unknown operator";
+      SEGMENT_LOAD (fun a o ->
+        intop t
+          (memsz sz
+            (ext s i32_segment_load8_s i32_segment_load8_u (opt a 0))
+            (ext s i32_segment_load16_s i32_segment_load16_u (opt a 1))
+            (fun _ -> unreachable) o)
+          (memsz sz
+            (ext s i64_segment_load8_s i64_segment_load8_u (opt a 0))
+            (ext s i64_segment_load16_s i64_segment_load16_u (opt a 1))
+            (ext s i64_segment_load32_s i64_segment_load32_u (opt a 2)) o)) }
   | (ixx as t)".store"(mem_size as sz)
     { if t = "i32" && sz = "32" then error lexbuf "unknown operator";
       STORE (fun a o ->
@@ -232,6 +252,18 @@ rule token = parse
             (i64_store8 (opt a 0))
             (i64_store16 (opt a 1))
             (i64_store32 (opt a 2)) o)) }
+  | (ixx as t)".segment.store"(mem_size as sz)
+    { if t = "i32" && sz = "32" then error lexbuf "unknown operator";
+      SEGMENT_STORE (fun a o ->
+        intop t
+          (memsz sz
+            (i32_segment_store8 (opt a 0))
+            (i32_segment_store16 (opt a 1))
+            (fun _ -> unreachable) o)
+          (memsz sz
+            (i64_segment_store8 (opt a 0))
+            (i64_segment_store16 (opt a 1))
+            (i64_segment_store32 (opt a 2)) o)) }
 
   | "offset="(nat as s) { OFFSET_EQ_NAT s }
   | "align="(nat as s) { ALIGN_EQ_NAT s }

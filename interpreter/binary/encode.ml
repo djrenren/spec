@@ -375,7 +375,8 @@ let encode m =
       | HandleAdd -> op 0xfa; op 0x02
       | HandleSub -> op 0xfa; op 0x03
       | HandleSlice -> op 0xfa; op 0x04
-
+      | NumericSegmentLoad l -> op 0xfa; instr (Load l @@ no_region)
+      | NumericSegmentStore l -> op 0xfa; instr (Store l @@ no_region)
     let const c =
       list instr c.it; end_ ()
 

@@ -137,9 +137,8 @@ let type_cvtop at = function
 
 
 (* Expressions *)
-
-let check_memop (c : context) (memop : 'a memop) get_sz at =
-  ignore (memory c (0l @@ at));
+let check_memop_without_memory (c : context) (memop : 'a memop) get_sz at =
+  require (memop.ty <> HandleType) at "memops should never read handles";
   let size =
     match get_sz memop.sz with
     | None -> size memop.ty
@@ -151,6 +150,9 @@ let check_memop (c : context) (memop : 'a memop) get_sz at =
   require (1 lsl memop.align <= size) at
     "alignment must not be larger than natural"
 
+let check_memop (c : context) (memop : 'a memop) get_sz at =
+  ignore (memory c (0l @@ at));
+  check_memop_without_memory c memop get_sz at
 let check_arity n at =
   require (n <= 1) at "invalid result arity, larger than 1 is not (yet) allowed"
 
@@ -300,6 +302,14 @@ let rec check_instr (c : context) (e : instr) (s : infer_stack_type) : op_type =
     [HandleType; I32Type] --> [HandleType]
   | HandleSlice ->
     [HandleType; I32Type; I32Type] --> [HandleType]
+
+  | NumericSegmentLoad memop ->
+    check_memop_without_memory c memop (Lib.Option.map fst) e.at;
+    [HandleType; I32Type] --> [memop.ty]
+
+  | NumericSegmentStore memop ->
+    check_memop_without_memory c memop (fun sz -> sz) e.at;
+    [HandleType; I32Type; memop.ty] --> []
 
 and check_seq (c : context) (es : instr list) : infer_stack_type =
   match es with
