@@ -50,6 +50,7 @@ let value_type = function
   | "i64" -> Types.I64Type
   | "f32" -> Types.F32Type
   | "f64" -> Types.F64Type
+  | "handle" -> Types.HandleType
   | _ -> assert false
 
 let intop t i32 i64 =
@@ -139,7 +140,7 @@ let reserved = ([^'\"''('')'';'] # space)+  (* hack for table size *)
 
 let ixx = "i" ("32" | "64")
 let fxx = "f" ("32" | "64")
-let nxx = ixx | fxx
+let nxx = ixx | fxx | "handle"
 let mixx = "i" ("8" | "16" | "32" | "64")
 let mfxx = "f" ("32" | "64")
 let sign = "s" | "u"

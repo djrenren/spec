@@ -95,6 +95,7 @@ let encode m =
       | I64Type -> vs7 (-0x02)
       | F32Type -> vs7 (-0x03)
       | F64Type -> vs7 (-0x04)
+      | HandleType -> vs7 (-0x06)
 
     let elem_type = function
       | FuncRefType -> vs7 (-0x10)
@@ -167,6 +168,7 @@ let encode m =
       | GlobalGet x -> op 0x23; var x
       | GlobalSet x -> op 0x24; var x
 
+      | Load ({ty = HandleType; _}) -> assert false
       | Load ({ty = I32Type; sz = None; _} as mo) -> op 0x28; memop mo
       | Load ({ty = I64Type; sz = None; _} as mo) -> op 0x29; memop mo
       | Load ({ty = F32Type; sz = None; _} as mo) -> op 0x2a; memop mo
@@ -196,6 +198,7 @@ let encode m =
       | Load {ty = F32Type | F64Type; sz = Some _; _} ->
         assert false
 
+      | Store ({ty = HandleType; _}) -> assert false
       | Store ({ty = I32Type; sz = None; _} as mo) -> op 0x36; memop mo
       | Store ({ty = I64Type; sz = None; _} as mo) -> op 0x37; memop mo
       | Store ({ty = F32Type; sz = None; _} as mo) -> op 0x38; memop mo
@@ -207,10 +210,10 @@ let encode m =
       | Store ({ty = I64Type; sz = Some Pack16; _} as mo) -> op 0x3d; memop mo
       | Store ({ty = I64Type; sz = Some Pack32; _} as mo) -> op 0x3e; memop mo
       | Store {ty = F32Type | F64Type; sz = Some _; _} -> assert false
-
       | MemorySize -> op 0x3f; u8 0x00
       | MemoryGrow -> op 0x40; u8 0x00
 
+      | Const {it = Handle _; _} -> assert false;
       | Const {it = I32 c; _} -> op 0x41; vs32 c
       | Const {it = I64 c; _} -> op 0x42; vs64 c
       | Const {it = F32 c; _} -> op 0x43; f32 c
@@ -220,6 +223,11 @@ let encode m =
       | Test (I64 I64Op.Eqz) -> op 0x50
       | Test (F32 _) -> assert false
       | Test (F64 _) -> assert false
+      | Test (Handle _)
+      | Compare (Handle _)
+      | Unary (Handle _)
+      | Binary (Handle _)
+      | Convert (Handle _) -> assert false
 
       | Compare (I32 I32Op.Eq) -> op 0x46
       | Compare (I32 I32Op.Ne) -> op 0x47

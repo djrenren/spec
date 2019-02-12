@@ -112,6 +112,9 @@ let load_value mem a o t =
   | F32Type -> F32 (F32.of_bits (Int64.to_int32 n))
   | F64Type -> F64 (F64.of_bits n)
 
+  (* We disallow handles in linear memory *)
+  | HandleType -> assert false
+
 let store_value mem a o v =
   let x =
     match v with
@@ -119,6 +122,9 @@ let store_value mem a o v =
     | I64 x -> x
     | F32 x -> Int64.of_int32 (F32.to_bits x)
     | F64 x -> F64.to_bits x
+
+    (* We disallow handles in linear memory *)
+    | Handle _ -> assert false 
   in storen mem a o (Types.size (Values.type_of v)) x
 
 let extend x n = function

@@ -179,6 +179,7 @@ let oper (intop, floatop) op =
   | I64 o -> intop "64" o
   | F32 o -> floatop "32" o
   | F64 o -> floatop "64" o
+  | Handle _ -> assert false (* again, ops are dumb so we skip out *)
   )
 
 let unop = oper (IntOp.unop, FloatOp.unop)
@@ -388,6 +389,7 @@ let literal lit =
   | Values.I64 i -> Node ("i64.const " ^ I64.to_string_s i, [])
   | Values.F32 z -> Node ("f32.const " ^ F32.to_string z, [])
   | Values.F64 z -> Node ("f64.const " ^ F64.to_string z, [])
+  | Values.Handle _ -> assert false (* no handle consts *)
 
 let definition mode x_opt def =
   try
