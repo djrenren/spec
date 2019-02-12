@@ -370,6 +370,8 @@ let encode m =
       | Convert (F64 F64Op.PromoteF32) -> op 0xbb
       | Convert (F64 F64Op.DemoteF64) -> assert false
       | Convert (F64 F64Op.ReinterpretInt) -> op 0xbf
+      | SegmentNew -> op 0xfa; op 0x00
+      | SegmentFree -> op 0xfa; op 0x01
 
     let const c =
       list instr c.it; end_ ()

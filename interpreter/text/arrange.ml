@@ -253,6 +253,8 @@ let rec instr e =
     | Unary op -> unop op, []
     | Binary op -> binop op, []
     | Convert op -> cvtop op, []
+    | SegmentNew -> "segment.new", []
+    | SegmentFree -> "segment.free", []
   in Node (head, inner)
 
 let const c =

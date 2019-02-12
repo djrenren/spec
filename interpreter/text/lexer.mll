@@ -333,6 +333,10 @@ rule token = parse
   | "import" { IMPORT }
   | "export" { EXPORT }
 
+
+  | "segment.new" { SEGMENT_NEW }
+  | "segment.free" { SEGMENT_FREE }
+
   | "module" { MODULE }
   | "binary" { BIN }
   | "quote" { QUOTE }
@@ -351,6 +355,7 @@ rule token = parse
   | "assert_exhaustion" { ASSERT_EXHAUSTION }
   | "input" { INPUT }
   | "output" { OUTPUT }
+
 
   | name as s { VAR s }
 

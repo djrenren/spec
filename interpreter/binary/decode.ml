@@ -432,7 +432,14 @@ let rec instr s =
   | 0xbd -> i64_reinterpret_f64
   | 0xbe -> f32_reinterpret_i32
   | 0xbf -> f64_reinterpret_i64
+  | 0xfa -> instr_memsafety s
 
+  | b -> illegal s pos b
+and instr_memsafety s =
+  let pos = pos s in
+  match op s with
+    0x00 -> SegmentNew
+  | 0x01 -> SegmentFree
   | b -> illegal s pos b
 
 and instr_block s = List.rev (instr_block' s [])

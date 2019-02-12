@@ -249,6 +249,11 @@ let rec step (c : config) : config =
         (try Eval_numeric.eval_cvtop cvtop v :: vs', []
         with exn -> vs', [Trapping (numeric_error e.at exn) @@ e.at])
 
+      | SegmentNew, _ ->
+        Crash.error e.at "memsafety execution unimplemented"
+
+      | SegmentFree, _ ->
+        Crash.error e.at "memsafety execution unimplemented"
       | _ ->
         let s1 = string_of_values (List.rev vs) in
         let s2 = string_of_value_types (List.map type_of (List.rev vs)) in

@@ -159,6 +159,7 @@ let inline_type_explicit (c : context) x ft at =
 %token ASSERT_MALFORMED ASSERT_INVALID ASSERT_SOFT_INVALID ASSERT_UNLINKABLE
 %token ASSERT_RETURN ASSERT_RETURN_CANONICAL_NAN ASSERT_RETURN_ARITHMETIC_NAN ASSERT_TRAP ASSERT_EXHAUSTION
 %token INPUT OUTPUT
+%token SEGMENT_NEW SEGMENT_FREE
 %token EOF
 
 %token<string> NAT
@@ -325,6 +326,8 @@ plain_instr :
   | UNARY { fun c -> $1 }
   | BINARY { fun c -> $1 }
   | CONVERT { fun c -> $1 }
+  | SEGMENT_FREE { fun c -> SegmentFree }
+  | SEGMENT_NEW { fun c -> SegmentNew }
 
 
 call_instr :
